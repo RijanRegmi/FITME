@@ -31,12 +31,12 @@ To install and run TrakWell on your local machine, follow these steps:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/yourusername/trakwell.git
+    git clone https://github.com/RijanRegmi/Trakwell.git
     ```
 
 2. **Navigate to the project directory:**
     ```sh
-    cd trakwell
+    cd Trakwell
     ```
 
 3. **Compile the project:**
@@ -78,12 +78,11 @@ We welcome contributions from the community! To contribute to TrakWell, follow t
 5. **Submit a pull request.**
 
 ## Team Members
-
-- **Member 1**: [GitHub Profile](https://github.com/Yogesh25900)
-- **Member 2**: [GitHub Profile](https://github.com/dhakalsundar)
-- **Member 3**: [GitHub Profile](https://github.com/RijanRegmi)
-- **Member 4**: [GitHub Profile](https://github.com/member4)
-- **Member 5**: [GitHub Profile](https://github.com/member5)
+- **Rijan Regmi**: [GitHub Profile](https://github.com/RijanRegmi)
+- **Yogesh Chaudhary**: [GitHub Profile](https://github.com/Yogesh25900)
+- **Sundar Dhakal**: [GitHub Profile](https://github.com/dhakalsundar)
+- **Aadhar Chand**: [GitHub Profile](https://github.com/member4)
+- **Aaditya Aryal**: [GitHub Profile](https://github.com/member5)
 
 ## License
 
