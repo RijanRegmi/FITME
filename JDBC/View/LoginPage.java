@@ -2,12 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 public class LoginPage extends JFrame {
     private JPanel loginPanelimg;
     private JPanel loginPanel;
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JRadioButton rememberRadio;
     private JButton loginButton;
     private JLabel loginPage;
     private JButton close;
@@ -21,14 +26,14 @@ public class LoginPage extends JFrame {
         setLocationRelativeTo(null);
 
         // icon
-        icon = new ImageIcon("C:/allcode/FITME/JDBC/img/health.png");
+        icon = new ImageIcon("C:/allcode/College Project Java/img/health.png");
         setIconImage(icon.getImage());
 
         // Maximize the window
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Background Image
-        ImageIcon img = new ImageIcon("C:/allcode/FITME/JDBC/img/bg.jpg");
+        ImageIcon img = new ImageIcon("C:/allcode/College Project Java/img/bg.jpg");
         Image image = img.getImage();
         Image scaledImage = image.getScaledInstance(1920, 1080, Image.SCALE_SMOOTH);
         img = new ImageIcon(scaledImage);
@@ -51,7 +56,7 @@ public class LoginPage extends JFrame {
         layeredPane.add(loginPanelimg, JLayeredPane.PALETTE_LAYER);
 
         // Add health image to loginPanelimg
-        ImageIcon img1 = new ImageIcon("C:/allcode/FITME/JDBC/img/health.png");
+        ImageIcon img1 = new ImageIcon("C:/allcode/College Project Java/img/health.png");
         Image image1 = img1.getImage();
         Image scaledImage1 = image1.getScaledInstance(700, 500, Image.SCALE_SMOOTH);
         img1 = new ImageIcon(scaledImage1);
@@ -61,7 +66,7 @@ public class LoginPage extends JFrame {
         loginPanelimg.add(imgLabel);
 
         // login Image
-        ImageIcon loginimg = new ImageIcon("C:/allcode/FITME/JDBC/img/login.png");
+        ImageIcon loginimg = new ImageIcon("C:/allcode/College Project Java/img/login.png");
         Image loginimage = loginimg.getImage();
         Image scaledloginImage = loginimage.getScaledInstance(30, 35, Image.SCALE_SMOOTH);
         loginimg = new ImageIcon(scaledloginImage);
@@ -113,6 +118,7 @@ public class LoginPage extends JFrame {
         usernameField.setBounds(210, 155, 300, 40);
         loginPanel.add(usernameLabel);
         loginPanel.add(usernameField);
+        // usernameField.add(loginbg);
 
         // Password
         JLabel passwordLabel = new JLabel("Password:");
@@ -123,6 +129,14 @@ public class LoginPage extends JFrame {
         passwordField.setBounds(210, 305, 300, 40);
         loginPanel.add(passwordLabel);
         loginPanel.add(passwordField);
+
+        // Remember Me
+        rememberRadio = new JRadioButton("Remember Me");
+        rememberRadio.setBackground(Color.WHITE);
+        rememberRadio.setFont(new Font("Arial", Font.BOLD, 24));
+        rememberRadio.setBounds(280, 400, 188, 20);
+        rememberRadio.setFocusable(false);
+        loginPanel.add(rememberRadio);
 
         // Forgot Password
         forgotPassword = new JButton("Forgot Password?");
@@ -142,6 +156,13 @@ public class LoginPage extends JFrame {
         loginButton.setFocusable(false);
         loginPanel.add(loginButton);
         loginButton.add(loginbg);
+        // loginButton.addActionListener(new ActionListener() {
+        // @Override
+        // public void actionPerformed(ActionEvent e) {
+        // btnLoginActionPerformed(e);
+        // // userloginActionPerformed(e);
+        // }
+        // });
 
         // Account Label
         accountLabel = new JLabel("Don't have an account?");
@@ -160,6 +181,16 @@ public class LoginPage extends JFrame {
         signupButton.setBorderPainted(false);
         signupButton.setFocusable(false);
         loginPanel.add(signupButton);
+        // signupButton.addActionListener(this);
+
+        signupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SignupPage signupPage = new SignupPage();
+                signupPage.setVisible(true);
+                dispose();
+            }
+        });
 
         setContentPane(layeredPane);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -167,4 +198,31 @@ public class LoginPage extends JFrame {
 
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new LoginPage().setVisible(true));
+    }
+
+    public void LoginButton(ActionListener listener) {
+        loginButton.addActionListener(listener);
+    }
+
+    public JTextField getusernameField() {
+        return usernameField;
+    }
+
+    public void getusernameField(JTextField usernameField) {
+        this.usernameField = usernameField;
+    }
+
+    public JPasswordField getpasswordField() {
+        return passwordField;
+    }
+
+    public void getpasswordField(JPasswordField passwordField) {
+        this.passwordField = passwordField;
+    }
+
+    public void setMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
 }

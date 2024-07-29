@@ -1,5 +1,3 @@
-package View;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -225,10 +223,10 @@ public class SignupPage extends JFrame {
         });
 
         // signupButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         btnSignupActionPerformed(e);
-        //     }
+        // @Override
+        // public void actionPerformed(ActionEvent e) {
+        // btnSignupActionPerformed(e);
+        // }
         // });
 
         add(layeredPane);
@@ -287,9 +285,6 @@ public class SignupPage extends JFrame {
         this.confirmField = confirmField;
     }
 
-    
-
-
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
@@ -297,5 +292,5 @@ public class SignupPage extends JFrame {
     public void addRegisterButtonListener(ActionListener listener) {
         signupButton.addActionListener(listener);
     }
- 
+
 }
