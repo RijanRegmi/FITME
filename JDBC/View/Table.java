@@ -19,7 +19,7 @@ public class Table extends JPanel implements ActionListener {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AddTask(Table.this); // Passing the current instance of Table
+                new AddTask(Table.this);
             }
         });
     }
