@@ -3,14 +3,17 @@ package View;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.*;
 
 public class FeedbackViewer extends JPanel {
     private JTable feedbackTable;
     private DefaultTableModel tableModel;
+    private static Connection conn;
 
-    public FeedbackViewer() {
+    public FeedbackViewer(Connection conn) {
+        FeedbackViewer.conn = conn;
         initializeUI();
-
+        fetchDataFromDatabase();
     }
 
     private void initializeUI() {
@@ -56,7 +59,51 @@ public class FeedbackViewer extends JPanel {
         feedbackTable.setRowHeight(25);
     }
 
-    public static void main(String[] args) {
+    private void fetchDataFromDatabase() {
+        try {
+            String sql = "SELECT feedback_id, user_name, feedback_text, submission_date, star_rating FROM feedback";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery();
 
+            while (rs.next()) {
+                int feedbackId = rs.getInt("feedback_id");
+                Date submissionDate = rs.getDate("submission_date");
+
+                String userName = rs.getString("user_name");
+                String starRating = rs.getString("star_rating");
+                String feedbackText = rs.getString("feedback_text");
+
+                // Add row to table
+                tableModel.addRow(new Object[] { feedbackId, submissionDate, userName, starRating, feedbackText });
+            }
+
+            rs.close();
+            statement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching feedback from database.");
+        }
+    }
+
+    public static void main(String[] args) {
+        // Initialize database connection
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
+
+            // Create and show the feedback viewer
+            SwingUtilities.invokeLater(() -> {
+                JFrame frame = new JFrame("Feedback Viewer");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setSize(1470, 600);
+                frame.setLocationRelativeTo(null);
+                frame.add(new FeedbackViewer(conn));
+                frame.setVisible(true);
+            });
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to connect to database.");
+        }
     }
 }

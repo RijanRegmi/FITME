@@ -74,7 +74,7 @@ public class LoginPage extends JFrame {
         loginbg.setBounds(0, 0, 30, 20);
 
         // Add text to loginPanelimg
-        JLabel textLabel = new JLabel("Trackoo");
+        JLabel textLabel = new JLabel("FITME");
         textLabel.setBounds(280, 600, 300, 50);
         textLabel.setFont(new Font("Arial", Font.BOLD, 40));
         textLabel.setForeground(Color.RED);
