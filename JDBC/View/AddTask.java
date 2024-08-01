@@ -45,7 +45,7 @@ public class AddTask extends javax.swing.JFrame {
                 AddButton.setText("Add");
                 AddButton.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                AddButtonActionPerformed(evt);
+                                actionPerformed(evt);
                                 dispose();
                         }
                 });
