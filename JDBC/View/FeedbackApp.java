@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class FeedbackApp extends JPanel {
 
@@ -41,7 +45,10 @@ public class FeedbackApp extends JPanel {
 
         // Add components to the main panel
         add(splitPane, BorderLayout.CENTER);
+        initDatabaseConnection();
 
+        // Load and display feedback
+        loadAndDisplayFeedback();
     }
 
     private JPanel createFormPanel() {
@@ -94,6 +101,104 @@ public class FeedbackApp extends JPanel {
         formPanel.add(StarratingCombobox);
 
         return formPanel;
+    }
+ private void initDatabaseConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to connect to database.");
+        }
+    }
+
+    private void loadAndDisplayFeedback() {
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT user_name, feedback_text, star_rating FROM feedback ORDER BY submission_date DESC";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Remove all components except the title label
+            feedbackPanel.removeAll();
+            feedbackPanel.add(feedbackTitleLabel);
+
+            while (rs.next()) {
+                String userName = rs.getString("user_name");
+                String feedbackText = rs.getString("feedback_text");
+                int starRating = rs.getInt("star_rating");
+
+                addFeedbackPanel(userName, feedbackText, starRating);
+            }
+            feedbackPanel.revalidate();
+            feedbackPanel.repaint();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to load feedback from database.");
+        }
+    }
+
+    private void addFeedbackPanel(String userName, String feedbackText, int starRating) {
+        JPanel feedbackItemPanel = new JPanel();
+        feedbackItemPanel.setLayout(new BorderLayout());
+        feedbackItemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 8));
+        feedbackItemPanel.setPreferredSize(new Dimension(feedbackScrollPane.getWidth() - 50, 150));
+
+        String stars = new String(new char[starRating]).replace("\0", "★");
+
+        JLabel userNameLabel = new JLabel(userName + " " + stars);
+        userNameLabel.setFont(new Font("", Font.BOLD, 18));
+        userNameLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        userNameLabel.setForeground(Color.decode("#d7be07"));
+        feedbackItemPanel.add(userNameLabel, BorderLayout.NORTH);
+
+        JTextArea feedbackTextArea = new JTextArea(feedbackText);
+        feedbackTextArea.setFont(new Font("Arial", Font.PLAIN, 18));
+        feedbackTextArea.setLineWrap(true);
+        feedbackTextArea.setWrapStyleWord(true);
+        feedbackTextArea.setEditable(false);
+        feedbackTextArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        feedbackItemPanel.add(feedbackTextArea, BorderLayout.CENTER);
+
+        feedbackPanel.add(feedbackItemPanel, 1);
+    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        String userName = jTextField1.getText();
+        String feedbackText = jTextArea1.getText();
+        int starRating = StarratingCombobox.getSelectedIndex() + 1;
+
+        if (userName.isEmpty() || feedbackText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter both your name and feedback.");
+            return;
+        }
+
+        try {
+            String sql = "INSERT INTO feedback (user_name, feedback_text, star_rating) VALUES (?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, userName);
+            statement.setString(2, feedbackText);
+            statement.setInt(3, starRating);
+            int rowsInserted = statement.executeUpdate();
+
+            if (rowsInserted > 0) {
+                JOptionPane.showMessageDialog(null, "Feedback added successfully!");
+                jTextField1.setText("");
+                jTextArea1.setText("");
+
+                // Add new feedback panel below the title label
+                addFeedbackPanel(userName, feedbackText, starRating);
+
+                feedbackPanel.revalidate();
+                feedbackPanel.repaint();
+            } else {
+                JOptionPane.showMessageDialog(null, "Failed to add feedback. Please try again.");
+            }
+
+            statement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error adding feedback to database.");
+        }
     }
 
     public static void main(String[] args) {
