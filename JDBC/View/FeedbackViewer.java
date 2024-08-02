@@ -40,7 +40,7 @@ public class FeedbackViewer extends JPanel {
         JScrollPane scrollPane = new JScrollPane(feedbackTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Column headers
+        // Add column headers 
         tableModel.addColumn("Feedback ID");
         tableModel.addColumn("Submission Date");
         tableModel.addColumn("User Name");
@@ -64,7 +64,7 @@ public class FeedbackViewer extends JPanel {
             String sql = "SELECT feedback_id, user_name, feedback_text, submission_date, star_rating FROM feedback";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
-
+            // Add rows to table model
             while (rs.next()) {
                 int feedbackId = rs.getInt("feedback_id");
                 Date submissionDate = rs.getDate("submission_date");
@@ -73,7 +73,6 @@ public class FeedbackViewer extends JPanel {
                 String starRating = rs.getString("star_rating");
                 String feedbackText = rs.getString("feedback_text");
 
-                // Add row to table
                 tableModel.addRow(new Object[] { feedbackId, submissionDate, userName, starRating, feedbackText });
             }
 
