@@ -114,36 +114,7 @@ public class BMICalculatorPanel extends JPanel {
         setPreferredSize(new Dimension(1470, 600));
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            double weight = Double.parseDouble(weightTextField.getText());
-            int feet = Integer.parseInt(feetTextField.getText());
-            int inches = Integer.parseInt(inchesTextField.getText());
-
-            if (weight <= 0  feet <= 0  inches < 0) {
-                throw new NumberFormatException();
-            }
-
-            // Convert feet and inches to meters
-            double heightInMeters = (feet * 0.3048) + (inches * 0.0254);
-            double bmi = weight / (heightInMeters * heightInMeters);
-            String status;
-
-            if (bmi < 18.5) {
-                status = "Underweight";
-            } else if (bmi >= 18.5 && bmi < 24.9) {
-                status = "Normal";
-            } else {
-                status = "Overweight";
-            }
-
-            resultLabel.setText(String.format("Your BMI: %.2f (%s)", bmi, status));
-
-        } catch (NumberFormatException ex) {
-            resultLabel.setText("Invalid input. Please enter valid numbers.");
-        }
-    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("BMI Calculator and Task Viewer");

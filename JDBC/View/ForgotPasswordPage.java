@@ -32,6 +32,7 @@ public class ForgotPasswordPage extends JFrame {
     private JPanel passwordPanel;
     private JPasswordField newPasswordField;
     private JPasswordField confirmPasswordField;
+    private JButton changePasswordButton;
     private JButton back1Button;
     private JButton back2Button;
     private JButton back3Button;
@@ -290,6 +291,17 @@ public class ForgotPasswordPage extends JFrame {
         passwordPanel.add(confirmPasswordLabel);
         passwordPanel.add(confirmPasswordField);
 
+        // Change Password Button
+        changePasswordButton = new JButton("Change Password");
+        changePasswordButton.setBackground(Color.decode("#FAAA70"));
+        changePasswordButton.setFont(new Font("Arial", Font.BOLD, 24));
+        changePasswordButton.setBounds(200, 555, 300, 50);
+        changePasswordButton.setFocusable(false);
+        passwordPanel.add(changePasswordButton);
+
+        emailPanel.add(loadingPanel);
+        loadingPanel.setVisible(false);
+
         // Account Label
         accountLabel = new JLabel("Don't have an account?");
         accountLabel.setFont(new Font("Arial", Font.BOLD, 22));
@@ -397,6 +409,24 @@ public class ForgotPasswordPage extends JFrame {
             }
         });
 
+        changePasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String newPassword = new String(newPasswordField.getPassword());
+                String confirmPassword = new String(confirmPasswordField.getPassword());
+                if (newPassword.equals(confirmPassword)) {
+                    if (updatePassword(userEmail, newPassword)) {
+                        JOptionPane.showMessageDialog(null, "Password changed successfully.");
+                        LoginPage loginPage = new LoginPage();
+                        loginPage.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to change password.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Passwords do not match. Please try again.");
+                }
+            }
+        });
     }
 
     private boolean isEmailRegistered(String email) {
