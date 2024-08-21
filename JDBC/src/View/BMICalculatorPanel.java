@@ -1,16 +1,24 @@
+package View;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import View.AdminPage;
 
-public class BMICalculatorPanel extends JPanel {
+public class BMICalculatorPanel extends JPanel implements ActionListener {
     private DefaultTableModel tableModel;
     private JTable taskTable;
     private JTextField weightTextField, feetTextField, inchesTextField;
     private JButton calculateButton, viewTasksButton;
     private JLabel resultLabel;
+
+    private Connection conn;
 
     public BMICalculatorPanel() {
         setLayout(null);
@@ -51,24 +59,28 @@ public class BMICalculatorPanel extends JPanel {
         inchesTextField.setLocation(400, 200);
         add(inchesTextField);
 
-        
-        
         calculateButton = new JButton("Calculate BMI");
         calculateButton.setBackground(Color.decode("#FAAA70"));
         calculateButton.setFont(new Font("Arial", Font.BOLD, 26));
         calculateButton.setSize(250, 50);
         calculateButton.setLocation(70, 300);
+        calculateButton.addActionListener(this);
         calculateButton.setFocusable(false);
         add(calculateButton);
 
-        //view task button 
         viewTasksButton = new JButton("View Tasks");
         viewTasksButton.setBackground(Color.decode("#FAAA70"));
         viewTasksButton.setSize(250, 50);
         viewTasksButton.setFocusable(false);
         viewTasksButton.setFont(new Font("Arial", Font.BOLD, 26));
         viewTasksButton.setLocation(370, 300);
+        viewTasksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                retrieveTasksFromDatabase();
 
+            }
+        });
         add(viewTasksButton);
         this.add(viewTasksButton);
 
@@ -110,11 +122,101 @@ public class BMICalculatorPanel extends JPanel {
         taskTable.getTableHeader().setReorderingAllowed(false);
         taskTable.setFont(new Font("Arial", Font.PLAIN, 20));
         taskTable.setRowHeight(60);
+        // taskTable.setHorizontalAlignment(JLabel.CENTER);
+
+        // Initialize database connection
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bmi_tasks", "root", "");
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
 
         setPreferredSize(new Dimension(1470, 600));
     }
 
-    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            double weight = Double.parseDouble(weightTextField.getText());
+            int feet = Integer.parseInt(feetTextField.getText());
+            int inches = Integer.parseInt(inchesTextField.getText());
+
+            if (weight <= 0 || feet <= 0 || inches < 0) {
+                throw new NumberFormatException();
+            }
+
+            // Convert feet and inches to meters
+            double heightInMeters = (feet * 0.3048) + (inches * 0.0254);
+            double bmi = weight / (heightInMeters * heightInMeters);
+            String status;
+
+            if (bmi < 18.5) {
+                status = "Underweight";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                status = "Normal";
+            } else {
+                status = "Overweight";
+            }
+
+            resultLabel.setText(String.format("Your BMI: %.2f (%s)", bmi, status));
+
+        } catch (NumberFormatException ex) {
+            resultLabel.setText("Invalid input. Please enter valid numbers.");
+        }
+    }
+
+    private void retrieveTasksFromDatabase() {
+        String weightText = weightTextField.getText().trim();
+        String feetText = feetTextField.getText().trim();
+        String inchesText = inchesTextField.getText().trim();
+
+        if (weightText.isEmpty() || feetText.isEmpty() || inchesText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter your weight and height before viewing tasks.",
+                    "Missing Input", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            double weight = Double.parseDouble(weightText);
+            int feet = Integer.parseInt(feetText);
+            int inches = Integer.parseInt(inchesText);
+
+            // Convert feet and inches to meters
+            double heightInMeters = (feet * 0.3048) + (inches * 0.0254);
+            double bmi = weight / (heightInMeters * heightInMeters);
+
+            String bmiCategory;
+            if (bmi < 18.5) {
+                bmiCategory = "Underweight";
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                bmiCategory = "Normal";
+            } else {
+                bmiCategory = "Overweight";
+            }
+
+            String sql = "SELECT day, task_id, diet, workout, bmi_range FROM tasks WHERE bmi_range = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, bmiCategory);
+            ResultSet rs = statement.executeQuery();
+
+            tableModel.setRowCount(0);
+            while (rs.next()) {
+                String day = rs.getString("day");
+                int taskID = rs.getInt("task_id");
+                String diet = rs.getString("diet");
+                String workout = rs.getString("workout");
+                String bmiRange = rs.getString("bmi_range");
+                tableModel.addRow(new Object[] { day, taskID, diet, workout, bmiRange });
+            }
+
+            rs.close();
+            statement.close();
+        } catch (NumberFormatException | SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("BMI Calculator and Task Viewer");

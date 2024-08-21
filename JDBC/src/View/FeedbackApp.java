@@ -1,12 +1,12 @@
+package View;
+
 import javax.swing.*;
 import java.awt.*;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class FeedbackApp extends JPanel {
 
+    private Connection conn;
     private JButton jButton1;
     private JLabel jLabel2;
     private JLabel jLabel3;
@@ -45,6 +45,8 @@ public class FeedbackApp extends JPanel {
 
         // Add components to the main panel
         add(splitPane, BorderLayout.CENTER);
+
+        // Initialize the database connection
         initDatabaseConnection();
 
         // Load and display feedback
@@ -81,6 +83,9 @@ public class FeedbackApp extends JPanel {
         jButton1.setForeground(Color.BLACK);
         jButton1.setSize(150, 40);
         jButton1.setLocation(200, 370);
+        jButton1.setBackground(Color.decode("#FAAA70"));
+        jButton1.setFocusable(false);
+        jButton1.addActionListener(evt -> jButton1ActionPerformed(evt));
 
         formPanel.add(jLabel2);
         formPanel.add(jTextField1);
@@ -89,9 +94,10 @@ public class FeedbackApp extends JPanel {
         formPanel.add(jButton1);
 
         StarratingCombobox = new JComboBox<>();
-        StarratingCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐" }));
-        StarratingCombobox.setFont(new Font("Arial", Font.BOLD, 24));
+        StarratingCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "★", "★★", "★★★", "★★★★", "★★★★★" }));
+        StarratingCombobox.setFont(new Font("", Font.BOLD, 24));
         StarratingCombobox.setBounds(210, 270, 300, 40);
+        // StarratingCombobox.setForeground(Color.YELLOW);
 
         JLabel StarratingLabel = new JLabel("Star Rating");
         StarratingLabel.setFont(new Font("Arial", Font.BOLD, 26));
@@ -102,10 +108,11 @@ public class FeedbackApp extends JPanel {
 
         return formPanel;
     }
- private void initDatabaseConnection() {
+
+    private void initDatabaseConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bmi_tasks", "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to connect to database.");

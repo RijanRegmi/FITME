@@ -12,24 +12,19 @@ public class Table extends JPanel implements ActionListener {
     private JButton addTaskButton;
 
     public Table() {
+        setLayout(null); // Use absolute layout
         initComponents();
         loadTableData();
-
-        JButton addButton = new JButton("Add Task");
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new AddTask(Table.this);
-            }
-        });
     }
 
     private void initComponents() {
         jScrollPane1 = new JScrollPane();
         jTable1 = new JTable();
+        jTable1.setBounds(100, 100, 1270, 400); // Adjust the position and size as needed
         addTaskButton = new JButton("Add Task");
-
-        setLayout(new BorderLayout());
+        addTaskButton.setBackground(Color.decode("#FAAA70"));
+        addTaskButton.setFocusable(false);
+        addTaskButton.setBounds(100, 50, 100, 30); // Adjust the position and size as needed
 
         addTaskButton.addActionListener(new ActionListener() {
             @Override
@@ -55,24 +50,25 @@ public class Table extends JPanel implements ActionListener {
         jTable1.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
 
         jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setBounds(100, 100, 1270, 400); // Adjust the position and size as needed
 
-        add(addTaskButton, BorderLayout.NORTH);
-        add(jScrollPane1, BorderLayout.CENTER);
+        add(addTaskButton);
+        add(jScrollPane1);
     }
 
     public void loadTableData() {
         Object[][] data = fetchDataFromDatabase();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clear existing data
+        model.setRowCount(0);
         for (Object[] row : data) {
             model.addRow(new Object[] { row[0], row[1], row[2], row[3], row[4], "Buttons" });
         }
     }
 
     private Object[][] fetchDataFromDatabase() {
-        String url = "jdbc:mysql://localhost:3306/user";
+        String url = "jdbc:mysql://localhost:3306/bmi_tasks";
         String user = "root";
-        String password = "root";
+        String password = "";
 
         String query = "SELECT day, task_id, diet, workout, bmi_range FROM tasks";
 

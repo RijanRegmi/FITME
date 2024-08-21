@@ -2,6 +2,10 @@ package View;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import Controller.LoginController;
+import DAO.UserDAO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,16 +13,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class UserPage extends JFrame implements ActionListener {
-    JPanel userPanelBtn;
-    JPanel userPanelimg;
-    JPanel dashboardPanel;
+public class AdminPage extends JFrame implements ActionListener {
+    JPanel adminPanelBtn;
+    JPanel adminPanelimg;
+    JPanel adminDashboardPanel;
+    JPanel addtaskPanel;
     JPanel dataPanel;
     JButton dashboardBtn;
+    JButton addtaskBtn;
     JButton dataBtn;
     JButton logoutBtn;
     JLabel datalbl;
     JLabel dashboardlbl;
+    JLabel addtasklbl;
     ImageIcon icon;
     BMICalculatorPanel bmiCalculatorPanel;
     Table taskTablePanel;
@@ -32,18 +39,18 @@ public class UserPage extends JFrame implements ActionListener {
     JPanel feedbackPanel;
     JButton feedbackbtn;
     JLabel feedbacklbl;
-    FeedbackApp feedbackapp;
+    FeedbackViewer feedbackViewerPanel;
     private Connection conn;
-    DashboardPanel dashboardPage;
+    adminDashboardPanel dashboardPage;
     private String username;
 
-    public UserPage(String username) {
+    public AdminPage(String username) {
         this.username = username;
 
         // Database connection setup
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bmi_tasks", "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             // ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Failed to connect to database.");
@@ -60,10 +67,11 @@ public class UserPage extends JFrame implements ActionListener {
         setIconImage(icon.getImage());
 
         // Initialize Panels
-        userPanelimg = new JPanel();
-        userPanelBtn = new JPanel();
+        adminPanelimg = new JPanel();
+        adminPanelBtn = new JPanel();
         dataPanel = new JPanel();
-        dashboardPanel = new JPanel();
+        adminDashboardPanel = new JPanel();
+        addtaskPanel = new JPanel();
         feedbackPanel = new JPanel();
 
         JLayeredPane layeredPane = new JLayeredPane();
@@ -100,6 +108,14 @@ public class UserPage extends JFrame implements ActionListener {
         JLabel dashbg = new JLabel("", dashimg, JLabel.CENTER);
         dashbg.setBounds(0, 0, 30, 20);
 
+        // AddTask Image
+        ImageIcon addTaskimg = new ImageIcon("C:/allcode/College Project Java/img/addTask.png");
+        Image addTaskimage = addTaskimg.getImage();
+        Image scaledaddTaskImage = addTaskimage.getScaledInstance(30, 35, Image.SCALE_SMOOTH);
+        addTaskimg = new ImageIcon(scaledaddTaskImage);
+        JLabel addTaskbg = new JLabel("", addTaskimg, JLabel.CENTER);
+        addTaskbg.setBounds(0, 0, 30, 20);
+
         // data Image
         ImageIcon dataimg = new ImageIcon("C:/allcode/College Project Java/img/Viewdata.png");
         Image dataimage = dataimg.getImage();
@@ -124,19 +140,19 @@ public class UserPage extends JFrame implements ActionListener {
         JLabel logoutbg = new JLabel("", logoutimg, JLabel.CENTER);
         logoutbg.setBounds(0, 0, 30, 20);
 
-        // Set up userPanelimg
-        userPanelimg.setBackground(Color.WHITE);
-        userPanelimg.setBounds(250, 0, 1670, 250);
-        userPanelimg.setLayout(null);
-        userPanelimg.add(bg);
-        userPanelimg.setBackground(Color.decode("#faf0b3"));
-        userPanelimg.add(bg2nd);
+        // Set up adminPanelimg
+        adminPanelimg.setBackground(Color.WHITE);
+        adminPanelimg.setBounds(250, 0, 1670, 250);
+        adminPanelimg.setLayout(null);
+        adminPanelimg.add(bg);
+        adminPanelimg.setBackground(Color.decode("#faf0b3"));
+        adminPanelimg.add(bg2nd);
 
-        // Set up userPanelBtn
-        userPanelBtn.setBackground(Color.decode("#FAAA70"));
-        userPanelBtn.setBounds(0, 0, 250, 1080);
-        userPanelBtn.setLayout(null);
-        userPanelBtn.add(bg1);
+        // Set up adminPanelBtn
+        adminPanelBtn.setBackground(Color.decode("#FAAA70"));
+        adminPanelBtn.setBounds(0, 0, 250, 1080);
+        adminPanelBtn.setLayout(null);
+        adminPanelBtn.add(bg1);
 
         // Dashboard Button
         dashboardBtn = new JButton("Dashboard");
@@ -144,34 +160,43 @@ public class UserPage extends JFrame implements ActionListener {
         dashboardBtn.setFont(new Font("Arial", Font.BOLD, 18));
         dashboardBtn.setBounds(25, 300, 200, 50);
         dashboardBtn.setFocusable(false);
-        userPanelBtn.add(dashboardBtn);
+        adminPanelBtn.add(dashboardBtn);
         dashboardBtn.add(dashbg);
+
+        // Add Task Button
+        addtaskBtn = new JButton("Add Task");
+        addtaskBtn.setBackground(Color.decode("#D9D9D9"));
+        addtaskBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        addtaskBtn.setBounds(25, 400, 200, 50);
+        addtaskBtn.setFocusable(false);
+        adminPanelBtn.add(addtaskBtn);
+        addtaskBtn.add(addTaskbg);
 
         // Data Button
         dataBtn = new JButton("Data");
         dataBtn.setBackground(Color.decode("#D9D9D9"));
         dataBtn.setFont(new Font("Arial", Font.BOLD, 18));
-        dataBtn.setBounds(25, 400, 200, 50);
+        dataBtn.setBounds(25, 500, 200, 50);
         dataBtn.setFocusable(false);
-        userPanelBtn.add(dataBtn);
+        adminPanelBtn.add(dataBtn);
         dataBtn.add(databg);
 
         // Feedback Button
         feedbackbtn = new JButton("Feedback");
         feedbackbtn.setBackground(Color.decode("#D9D9D9"));
         feedbackbtn.setFont(new Font("Arial", Font.BOLD, 18));
-        feedbackbtn.setBounds(25, 500, 200, 50);
+        feedbackbtn.setBounds(25, 600, 200, 50);
         feedbackbtn.setFocusable(false);
-        userPanelBtn.add(feedbackbtn);
+        adminPanelBtn.add(feedbackbtn);
         feedbackbtn.add(feedbackbg);
 
         // Logout Button
         logoutBtn = new JButton("Logout");
         logoutBtn.setBackground(Color.decode("#D9D9D9"));
         logoutBtn.setFont(new Font("Arial", Font.BOLD, 18));
-        logoutBtn.setBounds(25, 600, 200, 50);
+        logoutBtn.setBounds(25, 700, 200, 50);
         logoutBtn.setFocusable(false);
-        userPanelBtn.add(logoutBtn);
+        adminPanelBtn.add(logoutBtn);
         logoutBtn.add(logoutbg);
         logoutBtn.addActionListener(this);
 
@@ -193,16 +218,32 @@ public class UserPage extends JFrame implements ActionListener {
         bmiCalculatorPanel.setBounds(100, 100, 1470, 600);
         dataPanel.add(bmiCalculatorPanel);
 
-        // =============================================================dashboardPanel===================================================================
-        // Set up dashboardPanel
-        dashboardPanel.setBackground(Color.WHITE);
-        dashboardPanel.setBounds(250, 250, 1670, 830);
-        dashboardPanel.setLayout(null);
+        // =============================================================adminDashboardPanel===================================================================
+        // Set up adminDashboardPanel
+        adminDashboardPanel.setBackground(Color.WHITE);
+        adminDashboardPanel.setBounds(250, 250, 1670, 830);
+        adminDashboardPanel.setLayout(null);
 
-        dashboardPage = new DashboardPanel(username);
+        dashboardPage = new adminDashboardPanel(username);
         dashboardPage.setBounds(0, 0, 1670, 830);
-        dashboardPanel.add(dashboardPage);
-        dashboardPanel.setVisible(true);
+        adminDashboardPanel.add(dashboardPage);
+        adminDashboardPanel.setVisible(true);
+
+        // ==================================================================addTask======================================================================
+        // Set up addtaskPanel
+        addtaskPanel.setBackground(Color.WHITE);
+        addtaskPanel.setBounds(250, 250, 1670, 830);
+        addtaskPanel.setLayout(null);
+
+        addtasklbl = new JLabel("Assign Task");
+        addtasklbl.setBackground(Color.WHITE);
+        addtasklbl.setFont(new Font("Arial", Font.BOLD, 24));
+        addtasklbl.setBounds(820, 10, 300, 40);
+        addtaskPanel.add(addtasklbl);
+
+        taskTablePanel = new Table();
+        taskTablePanel.setBounds(100, 100, 1470, 600);
+        addtaskPanel.add(taskTablePanel);
 
         // ==============================================================FeedbackPannel===================================================================
         feedbackPanel.setBackground(Color.WHITE);
@@ -215,17 +256,18 @@ public class UserPage extends JFrame implements ActionListener {
         feedbacklbl.setBounds(820, 10, 300, 40);
         feedbackPanel.add(feedbacklbl);
 
-        feedbackapp = new FeedbackApp();
-        feedbackapp.setBounds(100, 100, 1470, 600);
-        feedbackPanel.add(feedbackapp);
+        feedbackViewerPanel = new FeedbackViewer(conn);
+        feedbackViewerPanel.setBounds(100, 100, 1470, 600);
+        feedbackPanel.add(feedbackViewerPanel);
 
         // =========================================================================================X=========================================================================================
 
         // Layering
-        layeredPane.add(userPanelBtn, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(userPanelimg, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(adminPanelBtn, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(adminPanelimg, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(dataPanel, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(dashboardPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(adminDashboardPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(addtaskPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(feedbackPanel, JLayeredPane.DEFAULT_LAYER);
 
         setContentPane(layeredPane);
@@ -235,7 +277,8 @@ public class UserPage extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dataPanel.setVisible(true);
-                dashboardPanel.setVisible(false);
+                adminDashboardPanel.setVisible(false);
+                addtaskPanel.setVisible(false);
                 feedbackPanel.setVisible(false);
             }
         });
@@ -243,7 +286,18 @@ public class UserPage extends JFrame implements ActionListener {
         dashboardBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dashboardPanel.setVisible(true);
+                adminDashboardPanel.setVisible(true);
+                dataPanel.setVisible(false);
+                addtaskPanel.setVisible(false);
+                feedbackPanel.setVisible(false);
+            }
+        });
+
+        addtaskBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addtaskPanel.setVisible(true);
+                adminDashboardPanel.setVisible(false);
                 dataPanel.setVisible(false);
                 feedbackPanel.setVisible(false);
             }
@@ -253,20 +307,30 @@ public class UserPage extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 feedbackPanel.setVisible(true);
-                dashboardPanel.setVisible(false);
+                adminDashboardPanel.setVisible(false);
                 dataPanel.setVisible(false);
+                addtaskPanel.setVisible(false);
             }
         });
 
         dataPanel.setVisible(false);
-        dashboardPanel.setVisible(true);
+        adminDashboardPanel.setVisible(true);
+        addtaskPanel.setVisible(false);
         feedbackPanel.setVisible(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new LoginPage().setVisible(true);
-        dispose();
+       LoginPage login = new LoginPage();
+        UserDAO ud = new UserDAO();
+        LoginController lc = new LoginController(ud, login);
+        login.setVisible(true);
+                dispose();
+    }
+
+    public static void main(String[] args) {
+
+        new AdminPage("admin").setVisible(true);
     }
 
 }

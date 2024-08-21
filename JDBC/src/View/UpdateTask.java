@@ -21,10 +21,11 @@ public class UpdateTask extends javax.swing.JFrame {
         private javax.swing.JComboBox<String> dayCombobox;
         private javax.swing.JLabel detaillbl;
 
-        
+        private Table table;
+
         // Constructor with parameters
-        public UpdateTask(String day, Long taskId, String diet, String workout, String bmi) {
-               
+        public UpdateTask(Table table, String day, Long taskId, String diet, String workout, String bmi) {
+                this.table = table;
                 initComponents();
                 dayCombobox.setSelectedItem(day);
                 TaskIdField.setText(taskId.toString());
@@ -73,7 +74,7 @@ public class UpdateTask extends javax.swing.JFrame {
                 UpdateButton.setText("Update Task");
                 UpdateButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
-                                
+                                updateTaskInDatabase();
                         }
                 });
 
@@ -169,10 +170,44 @@ public class UpdateTask extends javax.swing.JFrame {
                 pack();
         }
 
+        private void updateTaskInDatabase() {
+                String day = dayCombobox.getSelectedItem().toString();
+                Long taskId = Long.parseLong(TaskIdField.getText());
+                String diet = DietField.getText();
+                String workout = WorkoutField.getText();
+                String bmi = BMIComboBox.getSelectedItem().toString();
+
+                String url = "jdbc:mysql://localhost:3306/bmi_tasks";
+                String user = "root";
+                String password = "";
+
+                String query = "UPDATE tasks SET day = ?, diet = ?, workout = ?, bmi_range = ? WHERE task_id = ?";
+
+                try (Connection conn = DriverManager.getConnection(url, user, password);
+                                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+                        pstmt.setString(1, day);
+                        pstmt.setString(2, diet);
+                        pstmt.setString(3, workout);
+                        pstmt.setString(4, bmi);
+                        pstmt.setLong(5, taskId);
+
+                        pstmt.executeUpdate();
+                        JOptionPane.showMessageDialog(this, "Task updated successfully!");
+                        dispose();
+
+                        table.updateRow(taskId, day, diet, workout, bmi);
+
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error updating task: " + e.getMessage());
+                }
+        }
+
         public static void main(String args[]) {
                 java.awt.EventQueue.invokeLater(new Runnable() {
                         public void run() {
-                              
+                                new UpdateTask(null, "", 0L, "", "", "").setVisible(true);
                         }
                 });
         }

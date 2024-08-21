@@ -45,7 +45,7 @@ public class AddTask extends javax.swing.JFrame {
                 AddButton.setText("Add");
                 AddButton.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                actionPerformed(evt);
+                                AddButtonActionPerformed(evt);
                                 dispose();
                         }
                 });
@@ -136,8 +136,41 @@ public class AddTask extends javax.swing.JFrame {
                 pack();
         }
 
+        private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                String day = dayCombobox.getSelectedItem().toString();
+                Long taskId = Long.parseLong(TaskIdField.getText());
+                String diet = DietField.getText();
+                String workout = WorkoutField.getText();
+                String bmi = BMIComboBox.getSelectedItem().toString();
 
-               
+                // Perform input validation here
+
+                try {
+                        String url = "jdbc:mysql://localhost:3306/user";
+                        String user = "root";
+                        String password = "root";
+
+                        Connection conn = DriverManager.getConnection(url, user, password);
+
+                        String query = "INSERT INTO tasks (day, task_id, diet, workout, bmi_range) VALUES (?, ?, ?, ?, ?)";
+                        PreparedStatement pstmt = conn.prepareStatement(query);
+                        pstmt.setString(1, day);
+                        pstmt.setLong(2, taskId);
+                        pstmt.setString(3, diet);
+                        pstmt.setString(4, workout);
+                        pstmt.setString(5, bmi);
+
+                        pstmt.executeUpdate();
+                        conn.close();
+
+                        JOptionPane.showMessageDialog(this, "Task added successfully");
+                        table.loadTableData();
+
+                } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Error adding task: " + e.getMessage());
+                }
+        }
 
         private javax.swing.JButton AddButton;
         private javax.swing.JComboBox<String> BMIComboBox;

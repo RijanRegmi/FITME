@@ -7,6 +7,7 @@ import View.LoginPage;
 import View.AdminPage;
 import View.UserPage;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
@@ -39,23 +40,21 @@ public class LoginController {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            try {
-                admincheck = userdao.getadmindata(logninmodel);
-            } catch (SQLException ex) {
+            try{
+                admincheck= userdao.getadmindata(logninmodel);
+            }catch (SQLException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (admincheck) {
+            if(admincheck){
                 AdminPage admin = new AdminPage(username);
                 admin.setVisible(true);
-                loginPage.dispose();
 
             }
 
             else if (check) {
                 UserPage user = new UserPage(username);
-
+                
                 user.setVisible(true);
-                loginPage.dispose();
             } else {
                 loginPage.setMessage("Login fail.");
             }

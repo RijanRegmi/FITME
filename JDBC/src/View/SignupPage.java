@@ -1,4 +1,10 @@
+package View;
+
 import javax.swing.*;
+
+import Controller.LoginController;
+import DAO.UserDAO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +21,7 @@ public class SignupPage extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JPasswordField confirmField;
-    private JRadioButton maleRadio;
+    public JRadioButton maleRadio;
     private JRadioButton femaleRadio;
     private JButton signupButton;
     private JLabel signupPage;
@@ -216,17 +222,23 @@ public class SignupPage extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LoginPage loginPage = new LoginPage();
-                loginPage.setVisible(true);
+
+                  LoginPage login = new LoginPage();
+        UserDAO ud = new UserDAO();
+        LoginController lc = new LoginController(ud, login);
+        login.setVisible(true);
                 dispose();
+        //     // SignupController Sc = new SignupController(view, ud);
+
+                
             }
         });
 
         // signupButton.addActionListener(new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-        // btnSignupActionPerformed(e);
-        // }
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         btnSignupActionPerformed(e);
+        //     }
         // });
 
         add(layeredPane);
@@ -285,6 +297,19 @@ public class SignupPage extends JFrame {
         this.confirmField = confirmField;
     }
 
+    public static boolean isMaleSelected() {
+    return true;
+    }
+
+    public String getSelectedGender() {
+        if (maleRadio.isSelected()) {
+            return "Male";
+        } else if (femaleRadio.isSelected()) {
+            return "Female";
+        }
+        return ""; // Or handle the case where no gender is selected
+    }
+
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
@@ -293,4 +318,42 @@ public class SignupPage extends JFrame {
         signupButton.addActionListener(listener);
     }
 
+    // private void btnSignupActionPerformed(ActionEvent evt) {
+    //     String password = new String(passwordField.getPassword());
+    //     String confirmPassword = new String(confirmField.getPassword());
+
+    //     if (!password.equals(confirmPassword)) {
+    //         JOptionPane.showMessageDialog(signupButton, "Passwords do not match!");
+    //         return;
+    //     }
+
+    //     try {
+    //         Class.forName("com.mysql.cj.jdbc.Driver");
+    //         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root",
+    //                 "root");
+    //         String query = "INSERT INTO signup (name, contact, email, username, password,gender) VALUES (?, ?, ?, ?, ?, ?)";
+    //         PreparedStatement ps = con.prepareStatement(query);
+    //         ps.setString(1, fullnameField.getText());
+    //         ps.setString(2, contactField.getText());
+    //         ps.setString(3, emailField.getText());
+    //         ps.setString(4, usernameField.getText());
+    //         ps.setString(5, password);
+    //         ps.setString(6, maleRadio.isSelected() ? "Male" : "Female");
+    //         int i = ps.executeUpdate();
+    //         if (i > 0) {
+    //             JOptionPane.showMessageDialog(signupButton, "Account Created!");
+    //         } else {
+    //             JOptionPane.showMessageDialog(signupButton, "Failed to create account.");
+    //         }
+    //         ps.close();
+    //         con.close();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         JOptionPane.showMessageDialog(signupButton, "Error: " + e.getMessage());
+    //     }
+    // }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new SignupPage().setVisible(true));
+    }
 }
