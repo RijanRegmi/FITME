@@ -1,8 +1,8 @@
-# TrakWell
+# FITME
 
 ## Project Overview
 
-**TrakWell** is a comprehensive Java-based application designed to streamline and enhance task management and productivity tracking for teams. This project, developed by a team of five dedicated members, aims to provide a seamless experience for users to track their tasks, manage deadlines, and improve overall efficiency.
+**FITME** is a comprehensive Java-based application designed to streamline and enhance task management and productivity tracking for teams. This project, developed by a team of five dedicated members, aims to provide a seamless experience for users to track their tasks, manage deadlines, and improve overall efficiency.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@
 
 ## Introduction
 
-TrakWell is built with the goal of making task management simple, intuitive, and effective. The application offers a range of features that allow users to create, track, and manage tasks effortlessly. With TrakWell, teams can ensure that all members are on the same page, deadlines are met, and productivity is maximized.
+FITME is built with the goal of making task management simple, intuitive, and effective. The application offers a range of features that allow users to create, track, and manage tasks effortlessly. With FITME, teams can ensure that all members are on the same page, deadlines are met, and productivity is maximized.
 
 ## Features
 
@@ -27,16 +27,16 @@ TrakWell is built with the goal of making task management simple, intuitive, and
 
 ## Installation
 
-To install and run TrakWell on your local machine, follow these steps:
+To install and run FITME on your local machine, follow these steps:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/RijanRegmi/Trakwell.git
+    git clone https://github.com/RijanRegmi/FITME.git
     ```
 
 2. **Navigate to the project directory:**
     ```sh
-    cd Trakwell
+    cd FITME
     ```
 
 3. **Compile the project:**
@@ -57,10 +57,11 @@ Once the application is running, you can:
 - Set deadlines and receive notifications.
 - Track the progress of each task.
 - Collaborate with team members to ensure timely completion of tasks.
+- Calculate BMI and give task according to their BMI range
 
 ## Contributing
 
-We welcome contributions from the community! To contribute to TrakWell, follow these steps:
+We welcome contributions from the community! To contribute to FITME, follow these steps:
 
 1. **Fork the repository.**
 2. **Create a new branch:**
@@ -81,8 +82,8 @@ We welcome contributions from the community! To contribute to TrakWell, follow t
 - **Rijan Regmi**: [GitHub Profile](https://github.com/RijanRegmi)
 - **Yogesh Chaudhary**: [GitHub Profile](https://github.com/Yogesh25900)
 - **Sundar Dhakal**: [GitHub Profile](https://github.com/dhakalsundar)
-- **Aadhar Chand**: [GitHub Profile](https://github.com/member4)
-- **Aaditya Aryal**: [GitHub Profile](https://github.com/member5)
+- **Aadhar Chand**: [GitHub Profile](https://github.com/Aadhar-chand)
+- **Aaditya Aryal**: [GitHub Profile](https://github.com/Aadityaryal)
 
 ## License
 
@@ -90,4 +91,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Feel free to reach out to any of the team members for more information or assistance with the project. Thank you for using TrakWell!
+Feel free to reach out to any of the team members for more information or assistance with the project. Thank you for using FITME!
