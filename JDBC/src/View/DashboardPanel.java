@@ -252,23 +252,23 @@ public class DashboardPanel extends JPanel {
         return metrics.stringWidth(dashboardTitle.getText()) + 20; // Add some padding
     }
 
-    // public static void main(String[] args) {
-    //     // Create a JFrame to hold the DashboardPanel
-    //     JFrame frame = new JFrame("Dashboard");
-    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     frame.setSize(1470, 600);
+    public static void main(String[] args) {
+        // Create a JFrame to hold the DashboardPanel
+        JFrame frame = new JFrame("Dashboard");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1470, 600);
 
-    //     // Initialize your connection (you may want to pass this from your LoginPage)
-    //     MysqlConnection mysqlConnection = new MysqlConnection();
-    //     Connection conn = mysqlConnection.openConnection(); // Ensure this is properly initialized
+        // Initialize your connection (you may want to pass this from your LoginPage)
+        MysqlConnection mysqlConnection = new MysqlConnection();
+        Connection conn = mysqlConnection.openConnection(); // Ensure this is properly initialized
 
-    //     // Replace with a valid username for testing or test with a static username
-    //     // String testUsername = "yo"; // Ensure this username exists in your 'signup' table
+        // Replace with a valid username for testing or test with a static username
+        String testUsername = "yo"; // Ensure this username exists in your 'signup' table
 
-    //     // Create and add DashboardPanel with username
-    //     DashboardPanel panel = new DashboardPanel();
-    //     frame.add(panel);
+        // Create and add DashboardPanel with username
+        DashboardPanel panel = new DashboardPanel(testUsername);
+        frame.add(panel);
 
-    //     frame.setVisible(true);
-    // }
+        frame.setVisible(true);
+    }
 }

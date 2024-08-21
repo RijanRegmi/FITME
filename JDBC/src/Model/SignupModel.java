@@ -11,7 +11,7 @@ public class SignupModel {
     private String confirmPassword;
     private String gender;
 
-    public SignupModel(String fullname, String contact, String email, String username, String password,String gender,
+    public SignupModel(String fullname, String contact, String email, String username, String password, String gender,
             String confirmPassword) {
         this.fullname = fullname;
         this.contact = contact;
@@ -71,7 +71,8 @@ public class SignupModel {
     }
 
     public String getGender() {
-         return gender; }
+        return gender;
+    }
 
     public void setGender(String gender) {
         this.gender = gender;

@@ -1,16 +1,13 @@
 package View;
 
 import javax.swing.*;
+import javax.swing.text.PlainDocument;
 
 import Controller.LoginController;
 import DAO.UserDAO;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 
 public class SignupPage extends JFrame {
     private JPanel signupPanelimg;
@@ -124,6 +121,9 @@ public class SignupPage extends JFrame {
         contactField.setFont(new Font("Arial", Font.BOLD, 24));
         contactField.setBounds(280, 185, 300, 40);
         signupPanel.add(contactLabel);
+        PlainDocument document = (PlainDocument) contactField.getDocument();
+        document.setDocumentFilter(new NumericDocumentFilter(10)); // restricting user to enter only 10 digit number
+
         signupPanel.add(contactField);
 
         // Email
@@ -223,23 +223,14 @@ public class SignupPage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                  LoginPage login = new LoginPage();
-        UserDAO ud = new UserDAO();
-        LoginController lc = new LoginController(ud, login);
-        login.setVisible(true);
-                dispose();
-        //     // SignupController Sc = new SignupController(view, ud);
+                LoginPage login = new LoginPage();
+                UserDAO ud = new UserDAO();
+                @SuppressWarnings("unused")
+                LoginController lc = new LoginController(ud, login);
+                login.setVisible(true);
 
-                
             }
         });
-
-        // signupButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         btnSignupActionPerformed(e);
-        //     }
-        // });
 
         add(layeredPane);
         setVisible(true);
@@ -298,7 +289,7 @@ public class SignupPage extends JFrame {
     }
 
     public static boolean isMaleSelected() {
-    return true;
+        return true;
     }
 
     public String getSelectedGender() {
@@ -307,7 +298,7 @@ public class SignupPage extends JFrame {
         } else if (femaleRadio.isSelected()) {
             return "Female";
         }
-        return ""; // Or handle the case where no gender is selected
+        return "";
     }
 
     public void showMessage(String message) {
@@ -317,41 +308,6 @@ public class SignupPage extends JFrame {
     public void addRegisterButtonListener(ActionListener listener) {
         signupButton.addActionListener(listener);
     }
-
-    // private void btnSignupActionPerformed(ActionEvent evt) {
-    //     String password = new String(passwordField.getPassword());
-    //     String confirmPassword = new String(confirmField.getPassword());
-
-    //     if (!password.equals(confirmPassword)) {
-    //         JOptionPane.showMessageDialog(signupButton, "Passwords do not match!");
-    //         return;
-    //     }
-
-    //     try {
-    //         Class.forName("com.mysql.cj.jdbc.Driver");
-    //         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root",
-    //                 "root");
-    //         String query = "INSERT INTO signup (name, contact, email, username, password,gender) VALUES (?, ?, ?, ?, ?, ?)";
-    //         PreparedStatement ps = con.prepareStatement(query);
-    //         ps.setString(1, fullnameField.getText());
-    //         ps.setString(2, contactField.getText());
-    //         ps.setString(3, emailField.getText());
-    //         ps.setString(4, usernameField.getText());
-    //         ps.setString(5, password);
-    //         ps.setString(6, maleRadio.isSelected() ? "Male" : "Female");
-    //         int i = ps.executeUpdate();
-    //         if (i > 0) {
-    //             JOptionPane.showMessageDialog(signupButton, "Account Created!");
-    //         } else {
-    //             JOptionPane.showMessageDialog(signupButton, "Failed to create account.");
-    //         }
-    //         ps.close();
-    //         con.close();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         JOptionPane.showMessageDialog(signupButton, "Error: " + e.getMessage());
-    //     }
-    // }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SignupPage().setVisible(true));

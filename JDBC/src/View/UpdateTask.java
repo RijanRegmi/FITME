@@ -177,9 +177,9 @@ public class UpdateTask extends javax.swing.JFrame {
                 String workout = WorkoutField.getText();
                 String bmi = BMIComboBox.getSelectedItem().toString();
 
-                String url = "jdbc:mysql://localhost:3306/bmi_tasks";
+                String url = "jdbc:mysql://localhost:3306/user";
                 String user = "root";
-                String password = "";
+                String password = "root";
 
                 String query = "UPDATE tasks SET day = ?, diet = ?, workout = ?, bmi_range = ? WHERE task_id = ?";
 

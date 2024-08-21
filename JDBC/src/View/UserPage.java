@@ -47,10 +47,10 @@ public class UserPage extends JFrame implements ActionListener {
         // Database connection setup
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bmi_tasks", "root", "");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
         } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to connect to database.Yogesh");
+            // ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to connect to database.");
         }
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -269,15 +269,11 @@ public class UserPage extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       LoginPage login = new LoginPage();
+        LoginPage login = new LoginPage();
         UserDAO ud = new UserDAO();
         LoginController lc = new LoginController(ud, login);
         login.setVisible(true);
-                dispose();
+        dispose();
     }
-
-    // public static void main(String[] args) {
-    //     new UserPage("fwedf").setVisible(true);
-    // }
 
 }

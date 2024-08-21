@@ -85,8 +85,8 @@ public class LoginPage extends JFrame {
         loginbg.setBounds(0, 0, 30, 20);
 
         // Add text to loginPanelimg
-        JLabel textLabel = new JLabel("Trackoo");
-        textLabel.setBounds(280, 600, 300, 50);
+        JLabel textLabel = new JLabel("FITME");
+        textLabel.setBounds(295, 600, 300, 50);
         textLabel.setFont(new Font("Arial", Font.BOLD, 40));
         textLabel.setForeground(Color.RED);
         loginPanelimg.add(textLabel);
@@ -195,11 +195,9 @@ public class LoginPage extends JFrame {
         signupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 UserDAO ud = new UserDAO();
-    SignupPage view = new SignupPage();
-
-    SignupController Sc = new SignupController(view,ud);
-                view.setVisible(true);
+                UserDAO ud = new UserDAO();
+                SignupPage view = new SignupPage();
+                SignupController Sc = new SignupController(view, ud);
                 dispose();
             }
         });
@@ -213,24 +211,6 @@ public class LoginPage extends JFrame {
             }
         });
 
-        // loginButton.addActionListener(new ActionListener() {
-        // @Override
-        // public void actionPerformed(ActionEvent e) {
-
-        // String username = usernameField.getText();
-        // String password = new String(passwordField.getPassword());
-
-        // if (username == "rijan" & password == "rijan") {
-        // AdminPage admin = new AdminPage(username);
-        // admin.setVisible(true);
-        // loginPage.dispose();
-        // } else {
-        // loginPage.setMessage("Login fail.");
-        // }
-        // dispose();
-        // }
-        // });
-
         loadPreferences();
 
         setContentPane(layeredPane);
@@ -241,20 +221,16 @@ public class LoginPage extends JFrame {
 
     private void handleLogin() {
         String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
 
         if (rememberRadio.isSelected()) {
             preferences.put(PREF_USERNAME, username);
-            preferences.put(PREF_PASSWORD, password);
+            preferences.put(PREF_PASSWORD, "");
             preferences.putBoolean(PREF_REMEMBER_ME, true);
         } else {
             preferences.remove(PREF_USERNAME);
             preferences.remove(PREF_PASSWORD);
             preferences.putBoolean(PREF_REMEMBER_ME, false);
         }
-
-        JOptionPane.showMessageDialog(this, "Logged in successfully!");
-
     }
 
     private void loadPreferences() {
@@ -292,6 +268,5 @@ public class LoginPage extends JFrame {
     public void setMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
- 
 
 }

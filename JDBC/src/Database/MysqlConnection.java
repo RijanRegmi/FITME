@@ -8,8 +8,8 @@ public class MysqlConnection implements DatabaseConnection {
 
     private static final Logger LOGGER = Logger.getLogger(MysqlConnection.class.getName());
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
-    private static final String DATABASE = "bmi_tasks";
+    private static final String PASSWORD = "root";
+    private static final String DATABASE = "user";
     private static final String URL = "jdbc:mysql://localhost:3306/" + DATABASE;
 
     @Override

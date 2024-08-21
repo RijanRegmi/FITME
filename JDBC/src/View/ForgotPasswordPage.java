@@ -1,6 +1,10 @@
 package View;
 
 import javax.swing.*;
+
+import Controller.LoginController;
+import DAO.UserDAO;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -366,30 +370,46 @@ public class ForgotPasswordPage extends JFrame {
                 userEmail = emailField.getText();
                 if (userEmail.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter your email.");
-                } else {
+                } else if (isEmailRegistered(userEmail)) {
                     // Show loading components
                     loadingPanel.setVisible(true);
 
-                    // Run the email sending task in a new thread
-                    SwingUtilities.invokeLater(() -> {
-                        new SwingWorker<Void, Void>() {
-                            @Override
-                            protected Void doInBackground() throws Exception {
+                    // Run the email sending task in a background thread using SwingWorker
+                    SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                        @Override
+                        protected Void doInBackground() throws Exception {
+                            try {
+                                // Simulate sending the verification code
                                 sendVerificationCode(userEmail);
-                                return null;
+                            } catch (Exception ex) {
+                                // Handle exceptions during email sending
+                                JOptionPane.showMessageDialog(null,
+                                        "Failed to send verification code. Please try again.");
+                                loadingPanel.setVisible(false);
                             }
+                            return null;
+                        }
 
-                            @Override
-                            protected void done() {
-                                // Hide loading components and show next panel
+                        @Override
+                        protected void done() {
+                            try {
+                                // Hide loading components and show the next panel
                                 loadingPanel.setVisible(false);
                                 emailPanel.setVisible(false);
                                 codePanel.setVisible(true);
                                 passwordPanel.setVisible(false);
                                 JOptionPane.showMessageDialog(null, "Verification code sent to your email.");
+                            } catch (Exception ex) {
+                                // Handle any UI-related exceptions
+                                JOptionPane.showMessageDialog(null, "An error occurred while updating the UI.");
                             }
-                        }.execute();
-                    });
+                        }
+                    };
+
+                    // Start the SwingWorker task
+                    worker.execute();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Email not registered.");
                 }
             }
         });
@@ -417,8 +437,11 @@ public class ForgotPasswordPage extends JFrame {
                 if (newPassword.equals(confirmPassword)) {
                     if (updatePassword(userEmail, newPassword)) {
                         JOptionPane.showMessageDialog(null, "Password changed successfully.");
-                        LoginPage loginPage = new LoginPage();
-                        loginPage.setVisible(true);
+                        LoginPage login = new LoginPage();
+                        UserDAO ud = new UserDAO();
+                        LoginController lc = new LoginController(ud, login);
+                        login.setVisible(true);
+                        dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Failed to change password.");
                     }
@@ -453,7 +476,7 @@ public class ForgotPasswordPage extends JFrame {
     private void sendVerificationCode(String email) {
         verificationCode = generateVerificationCode();
         String to = email;
-        String from = "ruyoicregmi@gmail.com"; // Replace with your email
+        String from = "Enter your email"; // Replace with your email
         String host = "smtp.gmail.com"; // Replace with your SMTP host
 
         Properties properties = System.getProperties();
@@ -465,7 +488,7 @@ public class ForgotPasswordPage extends JFrame {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("ruyoicregmi@gmail.com", "geku fivq qwki axfa");
+                return new PasswordAuthentication("enter your email", "Enter your app password");
             }
         });
 

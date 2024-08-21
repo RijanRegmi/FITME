@@ -29,18 +29,26 @@ public class SignupController {
             String confirmpassword = signup.getconfirm().getText();
             String gender = signup.getSelectedGender();
 
+            // Password and confirmation validation
             if (!password.equals(confirmpassword)) {
                 signup.showMessage("Passwords do not match!");
                 return;
             }
 
+            // Password length validation
             if (password.length() < 8) {
                 signup.showMessage("Password must be at least 8 characters long.");
                 return;
             }
 
-            SignupModel signupmodel = new SignupModel(fullName, contact, email, username, password, gender,confirmpassword);
+            // Contact number validation: check if it contains exactly 10 digits and is
+            // numeric
+
+            // Proceed with the registration logic if all validations pass
+            SignupModel signupmodel = new SignupModel(fullName, contact, email, username, password, gender,
+                    confirmpassword);
             boolean isRegistered = false;
+
             try {
                 isRegistered = userdao.insertdata(signupmodel);
             } catch (SQLException ex) {
@@ -51,9 +59,9 @@ public class SignupController {
 
             if (isRegistered) {
                 signup.showMessage("Registration successful!");
-            } else {
-                signup.showMessage("Registration failed. Please try again.");
             }
         }
+
     }
+
 }

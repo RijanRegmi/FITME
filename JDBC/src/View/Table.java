@@ -66,9 +66,9 @@ public class Table extends JPanel implements ActionListener {
     }
 
     private Object[][] fetchDataFromDatabase() {
-        String url = "jdbc:mysql://localhost:3306/bmi_tasks";
+        String url = "jdbc:mysql://localhost:3306/user";
         String user = "root";
-        String password = "";
+        String password = "root";
 
         String query = "SELECT day, task_id, diet, workout, bmi_range FROM tasks";
 

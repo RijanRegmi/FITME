@@ -64,8 +64,9 @@ public class FeedbackApp extends JPanel {
         jLabel2.setLocation(50, 50);
 
         jTextField1 = new JTextField(20);
-        jTextField1.setSize(200, 30);
+        jTextField1.setSize(300, 30);
         jTextField1.setLocation(200, 50);
+        jTextField1.setFont(new Font("Arial", Font.PLAIN, 24));
 
         jLabel3 = new JLabel("Feedback");
         jLabel3.setFont(new Font("Arial", Font.BOLD, 26));
@@ -74,6 +75,7 @@ public class FeedbackApp extends JPanel {
         jLabel3.setLocation(50, 100);
 
         jTextArea1 = new JTextArea(5, 20);
+        jTextArea1.setFont(new Font("Arial", Font.PLAIN, 24));
         jScrollPane1 = new JScrollPane(jTextArea1);
         jScrollPane1.setSize(300, 150);
         jScrollPane1.setLocation(200, 100);
@@ -112,7 +114,7 @@ public class FeedbackApp extends JPanel {
     private void initDatabaseConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bmi_tasks", "root", "");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/user", "root", "root");
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to connect to database.");
